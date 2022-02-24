@@ -38,10 +38,10 @@ class StatelessDataLoader : public DataLoaderBase<
   /// some `options`.
   StatelessDataLoader(
       Dataset dataset,
-      Sampler sampler,
+      Sampler& sampler,
       DataLoaderOptions options)
       // NOLINTNEXTLINE(performance-move-const-arg)
-      : super(std::move(options)), sampler_(std::move(sampler)) {
+      : super(std::move(options)), sampler_(sampler) {
     for (const auto w : c10::irange(this->options_.workers))  {
       // Here we copy the dataset into the worker thread closure. Each worker
       // has its own copy of the dataset. This means the dataset must be
@@ -79,7 +79,7 @@ class StatelessDataLoader : public DataLoaderBase<
   }
 
   /// The `Sampler` used to produce batch requests.
-  Sampler sampler_;
+  Sampler& sampler_;
 };
 } // namespace data
 } // namespace torch
